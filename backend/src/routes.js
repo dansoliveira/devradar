@@ -4,6 +4,7 @@ import DevController from './app/controllers/DevController';
 
 const routes = new Router();
 
+routes.get('/devs', DevController.index);
 routes.post('/devs', DevController.store);
 
 export default routes;
