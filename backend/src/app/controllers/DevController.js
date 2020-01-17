@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import axios from 'axios';
 import Dev from '../models/Dev';
 import parseStringAsArray from '../utils/parseStringAsArray';
@@ -37,6 +38,40 @@ class DevController {
       techs: techsArray,
       location,
     });
+
+    return response.json(dev);
+  }
+
+  async update(request, response) {
+    const { id } = request.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return response.status(400).json({ error: 'Id is not valid' });
+    }
+    
+    const { name, avatar_url, bio, latitude, longitude, techs } = request.body;
+    
+    const techsArray = parseStringAsArray(techs);
+
+    const location = {
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    }
+
+    const dev = await Dev.findByIdAndUpdate(id, {
+      name,
+      avatar_url,
+      bio,
+      techs: techsArray,
+      location,
+    },
+    {
+      new: true,
+    });
+
+    if (!dev) {
+      return response.status(400).json({ error: 'Dev does not exists' });
+    }
 
     return response.json(dev);
   }
