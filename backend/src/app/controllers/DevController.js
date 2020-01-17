@@ -75,6 +75,22 @@ class DevController {
 
     return response.json(dev);
   }
+
+  async destroy(request, response) {
+    const { id } = request.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return response.status(400).json({ error: 'Id is not valid' });
+    }
+    
+    const dev = await Dev.findByIdAndDelete(id);
+
+    if (!dev) {
+      return response.status(400).json({ error: 'Dev does not exists' });
+    }
+
+    return response.send();
+  }
 }
 
 export default new DevController();
