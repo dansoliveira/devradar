@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Dev from '../models/Dev';
+import parseStringAsArray from '../utils/parseStringAsArray';
 
 class DevController {
   async index(request, response) {
@@ -21,7 +22,7 @@ class DevController {
 
     const { name = login, avatar_url, bio } = apiResponse.data;
 
-    const techsArray = techs.split(',').map(tech => tech.trim());
+    const techsArray = parseStringAsArray(techs);
 
     const location = {
       type: 'Point',
