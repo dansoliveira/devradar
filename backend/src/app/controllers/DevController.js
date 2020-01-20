@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import axios from 'axios';
 import Dev from '../models/Dev';
 import parseStringAsArray from '../utils/parseStringAsArray';
+import { findConnections, sendMessage } from '../../websocket';
 
 class DevController {
   async index(request, response) {
@@ -38,6 +39,13 @@ class DevController {
       techs: techsArray,
       location,
     });
+
+    const sendSocketMessageTo = findConnections(
+      { latitude, longitude },
+      techsArray,
+    );
+
+    sendMessage(sendSocketMessageTo, 'new-dev', dev);
 
     return response.json(dev);
   }
